@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       default: userRoles.STUDENT,
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     provider: {
       type: String,
       enum: ["credentials", "google"],

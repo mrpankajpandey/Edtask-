@@ -11,7 +11,6 @@ export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         email: { type: "email" },
         password: { type: "password" },
@@ -38,6 +37,9 @@ export const authOptions: NextAuthOptions = {
 
         if (!isValid) throw new Error("Invalid password");
 
+        if (!user.isVerified) {
+          throw new Error("Email not verified!");
+        }
         return {
           id: user._id.toString(),
           name: user.name,
@@ -66,10 +68,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account }) {
       await connectDB();
-
       if (account?.provider === "google") {
         const existingUser = await User.findOne({ email: user.email });
-
         if (!existingUser) {
           await User.create({
             name: user.name,
