@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { BookOpen, ClipboardCheck, Award, TrendingUp } from "lucide-react"
+import { BookOpen, ClipboardCheck, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AvailableAssignments } from "@/components/student/AvailableAssignments"
 import { MyAssignments } from "@/components/student/MyAssignments"
-import {toast} from 'sonner'
+import { toast } from "sonner"
 
 interface StudentStats {
   totalEnrolled: number
@@ -26,18 +26,16 @@ export default function StudentDashboard() {
   const fetchStats = async () => {
     try {
       setLoading(true)
-      const response = await fetch("/api/student/dashboard/stats")
-      const data = await response.json()
+      const res = await fetch("/api/student/dashboard/stats")
+      const data = await res.json()
 
       if (data.success) {
         setStats(data.data)
       } else {
-        toast.error( "Failed to fetch dashboard stats",
-       )
+        toast.error("Failed to fetch dashboard stats")
       }
-    } catch (error) {
-       toast.error( "Failed to fetch dashboard stats",
-       )
+    } catch {
+      toast.error("Failed to fetch dashboard stats")
     } finally {
       setLoading(false)
     }
@@ -68,51 +66,63 @@ export default function StudentDashboard() {
   ]
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Student Dashboard</h1>
-        <p className="text-muted-foreground">
-          Manage your assignments and track your progress
-        </p>
+    <div className="w-full">
+      {/* MAIN CONTAINER */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        {/* Heading */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Student Dashboard
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Manage your assignments and track your progress
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {statCards.map((stat) => (
+            <Card key={stat.title}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              </CardHeader>
+
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {loading ? "..." : stat.value}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {stat.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="available" className="space-y-4">
+          <TabsList className="flex flex-wrap">
+            <TabsTrigger value="available">
+              Available Assignments
+            </TabsTrigger>
+            <TabsTrigger value="enrolled">
+              My Assignments
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="available">
+            <AvailableAssignments onEnrollSuccess={fetchStats} />
+          </TabsContent>
+
+          <TabsContent value="enrolled">
+            <MyAssignments onSubmitSuccess={fetchStats} />
+          </TabsContent>
+        </Tabs>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {loading ? "..." : `${stat.value}`}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {stat.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Tabs for different views */}
-      <Tabs defaultValue="available" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="available">Available Assignments</TabsTrigger>
-          <TabsTrigger value="enrolled">My Assignments</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="available" className="space-y-4">
-          <AvailableAssignments onEnrollSuccess={fetchStats} />
-        </TabsContent>
-
-        <TabsContent value="enrolled" className="space-y-4">
-          <MyAssignments onSubmitSuccess={fetchStats} />
-        </TabsContent>
-      </Tabs>
     </div>
   )
 }

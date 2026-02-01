@@ -64,8 +64,6 @@ export async function PUT(
     }
 
     const body = await req.json()
-
-    console.log(body);
     
     const validation = updateAssignmentSchema.safeParse(body)
 

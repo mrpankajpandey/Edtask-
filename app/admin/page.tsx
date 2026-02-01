@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { StudentsTable } from "@/components/admin/dashboard/StudentsTable"
 import { AssignmentsOverview } from "@/components/admin/dashboard/AssignmentsOverview"
 import { EnrollmentsTable } from "@/components/admin/dashboard/EnrollmentsTable"
-import { toast } from 'sonner'
+import { toast } from "sonner"
+
 interface DashboardStats {
   totalStudents: number
   totalAssignments: number
@@ -20,7 +21,6 @@ interface DashboardStats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
-
 
   useEffect(() => {
     fetchStats()
@@ -35,12 +35,10 @@ export default function AdminDashboard() {
       if (data.success) {
         setStats(data.data)
       } else {
-        toast.error("Failed to fetch dashboard stats",
-        )
+        toast.error("Failed to fetch dashboard stats")
       }
-    } catch (error) {
-      toast.error("Failed to fetch dashboard stats",
-      )
+    } catch {
+      toast.error("Failed to fetch dashboard stats")
     } finally {
       setLoading(false)
     }
@@ -78,56 +76,64 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-muted-foreground">
-          Overview of students and assignments
-        </p>
+    <div className="w-full">
+      {/* MAIN CONTAINER */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        {/* Heading */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Admin Dashboard
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Overview of students and assignments
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {statCards.map((stat) => (
+            <Card key={stat.title}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              </CardHeader>
+
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {loading ? "..." : stat.value}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {stat.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="students" className="space-y-4">
+          <TabsList className="flex flex-wrap">
+            <TabsTrigger value="students">Students</TabsTrigger>
+            <TabsTrigger value="assignments">Assignments</TabsTrigger>
+            <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="students">
+            <StudentsTable />
+          </TabsContent>
+
+          <TabsContent value="assignments">
+            <AssignmentsOverview />
+          </TabsContent>
+
+          <TabsContent value="enrollments">
+            <EnrollmentsTable />
+          </TabsContent>
+        </Tabs>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {loading ? "..." : stat.value}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {stat.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Tabs for different views */}
-      <Tabs defaultValue="students" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="students">Students</TabsTrigger>
-          <TabsTrigger value="assignments">Assignments</TabsTrigger>
-          <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="students" className="space-y-4">
-          <StudentsTable />
-        </TabsContent>
-
-        <TabsContent value="assignments" className="space-y-4">
-          <AssignmentsOverview />
-        </TabsContent>
-
-        <TabsContent value="enrollments" className="space-y-4">
-          <EnrollmentsTable />
-        </TabsContent>
-      </Tabs>
     </div>
   )
 }
