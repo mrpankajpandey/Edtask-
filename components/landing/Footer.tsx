@@ -31,7 +31,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://your-live-app-link.com"
+            href="https://edutask-mrpankajpandey.vercel.app"
             target="_blank"
             className="hover:underline"
           >
@@ -39,7 +39,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://github.com/mrpankajpandey/your-repo-name"
+            href="https://github.com/mrpankajpandey/Edtask-.git"
             target="_blank"
             className="hover:underline"
           >
