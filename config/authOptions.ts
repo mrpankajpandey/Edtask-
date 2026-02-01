@@ -4,6 +4,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { type NextAuthOptions } from "next-auth";
 import connectDB from "@/lib/db";
+import { generateOtp } from "@/lib/otp";
+import Otp from "@/models/Otp";
+import { otpType } from "@/enums/OtpType";
+import { sendOtpMail } from "@/lib/mail";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -30,6 +34,22 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) throw new Error("User not found");
 
+        if (!user.isVerified) {
+          const otp = generateOtp();
+          await Otp.deleteMany({ email: user.email, type: otpType.SIGNUP });
+          await Otp.create({
+            email: user.email,
+            otp,
+            type: otpType.SIGNUP,
+            expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+          });
+
+          // const mail = signupEmail(user.name, user.email, otp);
+          await sendOtpMail(user.email, user.name, otp);
+
+          throw new Error("User is not verified");
+        }
+
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password,
@@ -37,9 +57,6 @@ export const authOptions: NextAuthOptions = {
 
         if (!isValid) throw new Error("Invalid password");
 
-        if (!user.isVerified) {
-          throw new Error("Email not verified!");
-        }
         return {
           id: user._id.toString(),
           name: user.name,

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 import Otp from "@/models/Otp";
-import { optType } from "@/enums/OtpType";
+import { otpType } from "@/enums/OtpType";
 
 export async function POST(req: Request) {
   try {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     }
     const existingOtp = await Otp.findOne({
       email,
-      type: optType.SIGNUP,
+      type: otpType.SIGNUP,
     });
 
     if (!existingOtp) {
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     }
     user.isVerified = true;
     await user.save();
-    await Otp.deleteMany({ email, type: optType.SIGNUP });
+    await Otp.deleteMany({ email, type: otpType.SIGNUP });
 
     return NextResponse.json({
       message: "Email verified successfully",

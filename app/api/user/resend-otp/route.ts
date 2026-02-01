@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 import Otp from "@/models/Otp";
-import { optType } from "@/enums/OtpType";
+import { otpType } from "@/enums/OtpType";
 import { generateOtp } from "@/lib/otp";
 import { sendOtpMail } from "@/lib/mail";
 
@@ -36,13 +36,13 @@ export async function POST(req: Request) {
 
     await Otp.deleteMany({
       email,
-      type: optType.SIGNUP,
+      type: otpType.SIGNUP,
     });
     const otp = generateOtp();
     await Otp.create({
       email,
       otp,
-      type: optType.SIGNUP,
+      type: otpType.SIGNUP,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
     await sendOtpMail(user.email, user.name, otp);

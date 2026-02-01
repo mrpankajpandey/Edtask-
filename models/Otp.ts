@@ -1,5 +1,5 @@
 import mongoose, { Schema, model, models } from "mongoose";
-import { optType } from "@/enums/OtpType";
+import { otpType } from "@/enums/OtpType";
 
 const OtpSchema = new Schema(
   {
@@ -17,7 +17,7 @@ const OtpSchema = new Schema(
 
     type: {
       type: String,
-      enum: [optType.FORGOT_PASSWORD, optType.SIGNUP],
+      enum: [otpType.FORGOT_PASSWORD, otpType.SIGNUP],
       required: true,
     },
 

@@ -1,4 +1,4 @@
-export enum optType{
+export enum otpType{
     SIGNUP='SIGHNUP',
     FORGOT_PASSWORD='FORGOT_PASSWORD'
 }
