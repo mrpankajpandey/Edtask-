@@ -93,6 +93,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             provider: "google",
             role: userRoles.STUDENT,
+            isVerified: true
           });
         }
         user.id = existingUser._id.toString();
