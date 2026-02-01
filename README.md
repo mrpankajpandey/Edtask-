@@ -4,9 +4,9 @@
 
 EduTask is a role-based assignment management platform built with **Next.js App Router**, **NextAuth**, and **MongoDB**. It supports Admin and Student roles with complete authentication and assignment workflows.
 
-## ✨ Features
+##  Features
 
-### 🔐 Authentication
+###  Authentication
 
 - User registration
 - Login with credentials
@@ -16,7 +16,7 @@ EduTask is a role-based assignment management platform built with **Next.js App 
 - Reset password via OTP
 - Role-based access (Admin / Student)
 
-### 👨‍💼 Admin Features
+###  Admin Features
 
 - Admin dashboard
 - Create assignments
@@ -25,7 +25,7 @@ EduTask is a role-based assignment management platform built with **Next.js App 
 - Delete assignments
 - View student enrollments
 
-### 👨‍🎓 Student Features
+###  Student Features
 
 - View available assignments
 - Enroll in assignments
@@ -35,14 +35,14 @@ EduTask is a role-based assignment management platform built with **Next.js App 
     - `NOT_SUBMITTED`
     - `SUBMITTED`
 
-### 📋 Assignment Workflow
+###  Assignment Workflow
 
 1. Admin creates assignment
 2. Student views available assignments
 3. Student enrolls
 4. Student submits assignment
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Category | Technologies |
 | --- | --- |
@@ -55,14 +55,14 @@ EduTask is a role-based assignment management platform built with **Next.js App 
 | **Notifications** | Sonner |
 | **Date Handling** | date-fns |
 
-## 👥 User Roles
+## User Roles
 
 | Role | Access |
 | --- | --- |
 | **Admin** | Assignment CRUD, Enrollment Management |
 | **Student** | Enroll, Submit, View Status |
 
-## 🔑 Demo Credentials
+##  Demo Credentials
 
 ### Guest Admin
 
@@ -74,7 +74,7 @@ EduTask is a role-based assignment management platform built with **Next.js App 
 - **Email:** [`student@gmail.com`](mailto:student@gmail.com)
 - **Password:** [`student@gmail.com`](mailto:student@gmail.com)
 
-## 🔄 Auth Flow
+##  Auth Flow
 
 ### Signup
 
@@ -84,7 +84,7 @@ Register → Email OTP → Verify → Login
 
 Enter email → OTP → Reset password → Login
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/
@@ -109,7 +109,7 @@ models/
 middleware/
 ```
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 Create a `.env.local` file in the root directory:
 
@@ -126,7 +126,7 @@ EMAIL_USER=your_email
 EMAIL_PASS=your_email_password
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Installation
 
@@ -142,29 +142,20 @@ pnpm dev
 
 Open http://localhost:3000 in your browser.
 
-## 🌐 Live Deployment
+## Live Deployment https://edutask-mrpankajpandey.vercel.app
 
-👉 [edutask-mrpankajpandey.vercel.app]
+##  GitHub Repository https://github.com/mrpankajpandey/Edtask-.git
 
-## 📦 GitHub Repository
-
-👉 [https://github.com/mrpankajpandey/Edtask-.git]
-
-## 👤 Author
-
+## Author
 **Pankaj Kumar Pandey**
 
 - GitHub: [mrpankajpandey](https://github.com/mrpankajpandey)
 - LinkedIn: [mrpankajpandey](https://linkedin.com/in/mrpankajpandey)
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 - [ ]  File upload for assignment submission
 - [ ]  Admin analytics dashboard
 - [ ]  Pagination & filtering
 - [ ]  Role-based permissions middleware
 - [ ]  Assignment deadlines auto-lock
-
----
-
-**Made with ❤️ by Pankaj Kumar Pandey**
