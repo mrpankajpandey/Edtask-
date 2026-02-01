@@ -144,11 +144,11 @@ Open http://localhost:3000 in your browser.
 
 ## 🌐 Live Deployment
 
-👉 [Add your deployed link here]
+👉 [edutask-mrpankajpandey.vercel.app]
 
 ## 📦 GitHub Repository
 
-👉 [Add your repository link here]
+👉 [https://github.com/mrpankajpandey/Edtask-.git]
 
 ## 👤 Author
 
