@@ -86,7 +86,7 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     await signIn("google", {
-      callbackUrl: "/dashboard",
+      callbackUrl: "/",
     });
   };
   const handleGuestLogin = async (role: userRoles) => {

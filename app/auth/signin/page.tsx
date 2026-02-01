@@ -99,7 +99,7 @@ function Login() {
     setIsLoading(true);
 
     await signIn("google", {
-      callbackUrl: "/dashboard",
+      callbackUrl: "/",
     });
   };
 
