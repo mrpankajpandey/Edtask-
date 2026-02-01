@@ -92,8 +92,12 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             email: user.email,
             provider: "google",
+            role: userRoles.STUDENT,
           });
         }
+        user.id = existingUser._id.toString();
+        user.role = existingUser.role;
+        user.phone = existingUser.phone || null;
       }
 
       return true;
