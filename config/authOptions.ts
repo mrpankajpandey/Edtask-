@@ -37,7 +37,12 @@ export const authOptions: NextAuthOptions = {
 
         if (!user.isVerified) {
           const otp = generateOtp();
-          await Otp.deleteMany({ email: user.email, type: otpType.SIGNUP });
+
+          await Otp.deleteMany({
+            email: user.email,
+            type: otpType.SIGNUP,
+          });
+
           await Otp.create({
             email: user.email,
             otp,
@@ -45,7 +50,6 @@ export const authOptions: NextAuthOptions = {
             expiresAt: new Date(Date.now() + 10 * 60 * 1000),
           });
 
-          // const mail = signupEmail(user.name, user.email, otp);
           await sendOtpMail(user.email, user.name, otp, "signup");
 
           throw new Error("User is not verified");
@@ -55,6 +59,7 @@ export const authOptions: NextAuthOptions = {
           credentials.password,
           user.password,
         );
+
         if (!isValid) throw new Error("Invalid password");
 
         return {
@@ -84,22 +89,25 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
+      if (account?.provider !== "google") return true;
+
       await connectDB();
-      if (account?.provider === "google") {
-        const existingUser = await User.findOne({ email: user.email });
-        if (!existingUser) {
-          await User.create({
-            name: user.name,
-            email: user.email,
-            provider: "google",
-            role: userRoles.STUDENT,
-            isVerified: true
-          });
-        }
-        user.id = existingUser._id.toString();
-        user.role = existingUser.role;
-        user.phone = existingUser.phone || null;
+
+      let dbUser = await User.findOne({ email: user.email });
+
+      if (!dbUser) {
+        dbUser = await User.create({
+          name: user.name,
+          email: user.email,
+          provider: "google",
+          role: userRoles.STUDENT,
+          isVerified: true,
+        });
       }
+
+      user.id = dbUser._id.toString();
+      user.role = dbUser.role;
+      user.phone = dbUser.phone || null;
 
       return true;
     },
@@ -108,7 +116,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        token.phone = user.phone || undefined;
+        token.phone = user.phone ?? undefined;
       }
       return token;
     },
@@ -117,9 +125,10 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as userRoles;
-        session.user.phone = token.phone || undefined;
+        session.user.phone = token.phone as string | undefined;
       }
       return session;
     },
   },
 };
+
