@@ -1,0 +1,4 @@
+export enum optType{
+    SIGNUP='SIGHNUP',
+    FORGOT_PASSWORD='FORGOT_PASSWORD'
+}
