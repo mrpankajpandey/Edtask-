@@ -18,7 +18,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import User from "@/models/User";
 import { userRoles } from "@/enums/Roles";
 
 function Login() {
@@ -39,7 +38,7 @@ function Login() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!session?.user?.role) return;
+    if (!session?.user.role) return;
     if (session.user.role === "ADMIN") router.push("/admin");
     else router.push("/student");
   }, [session, router]);

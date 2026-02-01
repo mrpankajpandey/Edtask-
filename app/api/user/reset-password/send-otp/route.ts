@@ -2,9 +2,9 @@ import { NextResponse } from "next/server"
 import connectDB from "@/lib/db"
 import User from "@/models/User"
 import Otp from "@/models/Otp"
-import { optType } from "@/enums/OtpType"
+import { otpType } from "@/enums/OtpType"
 import { generateOtp } from "@/lib/otp"
-import { sendOtpMail } from "@/lib/mail"
+import { sendOtpMail } from "@/lib/sendOtpMail"
 
 export async function POST(req: Request) {
   try {
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     }
     const existingOtp = await Otp.findOne({
       email,
-      type: optType.FORGOT_PASSWORD,
+      type: otpType.FORGOT_PASSWORD,
     })
 
     if (existingOtp) {
@@ -52,11 +52,11 @@ export async function POST(req: Request) {
     await Otp.create({
       email,
       otp,
-      type: optType.FORGOT_PASSWORD,
+      type: otpType.FORGOT_PASSWORD,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     })
 
-    await sendOtpMail(user.name, email, otp)
+    await sendOtpMail(user.name, email, otp, "forgot")
 
     return NextResponse.json({
       message: "OTP sent successfully",

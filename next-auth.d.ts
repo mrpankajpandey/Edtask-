@@ -1,34 +1,26 @@
-import NextAuth from "next-auth";
+import { userRoles } from "@/enums/Roles"
+import { DefaultSession } from "next-auth"
 
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string;
-      email: string;
-      phone?: string;
-      image?: string;
-      name: string;
-      role: string;
-    };
+      id: string
+      role: userRoles
+      phone?: string
+    } & DefaultSession["user"]
   }
 
   interface User {
-    id: string;
-    email: string;
-    name: string;
-    phone?: string;
-    image?: string;
-    role: string;
+    id: string
+    role: userRoles
+    phone?: string
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id: string;
-    email: string;
-    name: string;
-    phone?: string;
-    image?: string;
-    role: string;
+    id: string
+    role: userRoles
+    phone?: string
   }
 }

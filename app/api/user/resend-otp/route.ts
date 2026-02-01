@@ -4,7 +4,7 @@ import User from "@/models/User";
 import Otp from "@/models/Otp";
 import { otpType } from "@/enums/OtpType";
 import { generateOtp } from "@/lib/otp";
-import { sendOtpMail } from "@/lib/mail";
+import { sendOtpMail } from "@/lib/sendOtpMail";
 
 export async function POST(req: Request) {
   try {
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       type: otpType.SIGNUP,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
-    await sendOtpMail(user.email, user.name, otp);
+    await sendOtpMail(user.email, user.name, otp, "signup");
 
     return NextResponse.json({
       message: "OTP sent again",

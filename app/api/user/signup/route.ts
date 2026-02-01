@@ -5,7 +5,7 @@ import Otp from "@/models/Otp"
 import { registerSchema } from "@/lib/validations/auth"
 import { generateOtp } from "@/lib/otp"
 import { otpType } from "@/enums/OtpType"
-import { sendOtpMail } from "@/lib/mail"
+import { sendOtpMail } from "@/lib/sendOtpMail"
 
 export async function POST(req: Request) {
   try {
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     })
 
-    await sendOtpMail(user.name, user.email, otp)
+    await sendOtpMail(user.name, user.email, otp, "signup")
 
     // ✅ SUCCESS RESPONSE
     return NextResponse.json(

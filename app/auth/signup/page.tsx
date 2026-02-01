@@ -35,7 +35,7 @@ export default function SignUpPage() {
   const router = useRouter();
   useEffect(() => {
     if (!session?.user?.role) return;
-    if (session.user.role === "ADMIN") router.push("/admin");
+    if (session?.user?.role === "ADMIN") router.push("/admin");
     else router.push("/student");
   }, [session, router]);
 
