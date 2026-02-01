@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+import { userRoles } from "@/enums/Roles";
 
 
 export default function SignUpPage() {
@@ -34,8 +35,8 @@ export default function SignUpPage() {
   const router = useRouter();
   useEffect(() => {
     if (!session?.user?.role) return;
-    if (session.user.role === "ADMIN") router.push("/admin/dashboard");
-    else router.push("/student/dashboard");
+    if (session.user.role === "ADMIN") router.push("/admin");
+    else router.push("/student");
   }, [session, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,6 +89,50 @@ export default function SignUpPage() {
       callbackUrl: "/dashboard",
     });
   };
+  const handleGuestLogin = async (role: userRoles) => {
+
+    try {
+      setIsLoading(true);
+
+      const credentials =
+        role === userRoles.ADMIN
+          ? { email: "admin@gmail.com", password: "admin@gmail.com" }
+          : { email: "student@gmail.com", password: "student@gmail.com" };
+
+      const res = await signIn("credentials", {
+        redirect: false,
+        ...credentials,
+      });
+
+      if (res?.error) {
+        toast.error("Guest login failed");
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success(`Logged in as Guest ${role === userRoles.ADMIN ? "ADMIN" : "STUDNET"}`);
+      setIsLoading(false);
+     } catch (err: any) {
+      console.error(err);
+
+      const apiError = err?.response?.data;
+
+      // ✅ ZOD FIELD ERRORS
+      if (apiError?.errors) {
+        (Object.values(apiError.errors) as string[][])
+          .flat()
+          .forEach((msg) => toast.error(msg));
+
+      } else {
+        toast.error(
+          apiError?.message ||
+          apiError?.error ||
+          "Signup failed. Please try again."
+        );
+      }
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-muted/10 px-4">
       <Card className="w-full max-w-sm shadow-lg">
@@ -181,6 +226,26 @@ export default function SignUpPage() {
             />
             Continue with Google
           </Button>
+          <div className="mt-4 grid gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleGuestLogin(userRoles.ADMIN)}
+            >
+              Login as Guest Admin
+            </Button>
+
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleGuestLogin(userRoles.STUDENT)}
+            >
+              Login as Guest Student
+            </Button>
+          </div>
+
         </CardContent>
 
         <CardFooter className="flex flex-col text-center">

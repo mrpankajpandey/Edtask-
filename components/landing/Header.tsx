@@ -63,8 +63,8 @@ export default function Header() {
                   <Link
                     href={
                       user.role === "ADMIN"
-                        ? "/admin/dashboard"
-                        : "/student/dashboard"
+                        ? "/admin"
+                        : "/student"
                     }
                   >
                     Dashboard

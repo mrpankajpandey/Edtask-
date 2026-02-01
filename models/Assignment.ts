@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models } from "mongoose"
+import mongoose, { Schema, model, models } from "mongoose";
 
 const AssignmentSchema = new Schema(
   {
@@ -34,9 +34,29 @@ const AssignmentSchema = new Schema(
       ref: "User",
       required: true,
     },
+    // Students enrolled in this assignment
+    enrolledStudents: [
+      {
+        student: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        enrolledAt: {
+          type: Date,
+          default: Date.now,
+        },
+        submissionStatus: {
+          type: String,
+          enum: ["NOT_SUBMITTED", "SUBMITTED"],
+          default: "NOT_SUBMITTED",
+        },
+        submittedAt: {
+          type: Date,
+        },
+      },
+    ],
   },
-  { timestamps: true }
-)
+  { timestamps: true },
+);
 
-export default models.Assignment ||
-  model("Assignment", AssignmentSchema)
+export default models.Assignment || model("Assignment", AssignmentSchema);

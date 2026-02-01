@@ -4,7 +4,7 @@ import User from "@/models/User"
 import Otp from "@/models/Otp"
 import { registerSchema } from "@/lib/validations/auth"
 import { generateOtp } from "@/lib/otp"
-import { optType } from "@/enums/OtpType"
+import { otpType } from "@/enums/OtpType"
 import { sendOtpMail } from "@/lib/mail"
 
 export async function POST(req: Request) {
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     await Otp.create({
       email,
       otp,
-      type: optType.SIGNUP,
+      type: otpType.SIGNUP,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     })
 

@@ -18,6 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import User from "@/models/User";
+import { userRoles } from "@/enums/Roles";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -38,7 +40,8 @@ function Login() {
 
   useEffect(() => {
     if (!session?.user?.role) return;
-    else router.push("/");
+    if (session.user.role === "ADMIN") router.push("/admin");
+    else router.push("/student");
   }, [session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,7 +92,6 @@ function Login() {
     }
 
     toast.success("Login successful!");
-    router.push("/dashboard");
     setIsLoading(false);
   };
 
@@ -100,6 +102,49 @@ function Login() {
     await signIn("google", {
       callbackUrl: "/dashboard",
     });
+  };
+
+  const handleGuestLogin = async (role: userRoles) => {
+    try {
+      setIsLoading(true);
+
+      const credentials =
+        role === userRoles.ADMIN
+          ? { email: "admin@gmail.com", password: "admin@gmail.com" }
+          : { email: "student@gmail.com", password: "student@gmail.com" };
+
+      const res = await signIn("credentials", {
+        redirect: false,
+        ...credentials,
+      });
+
+      if (res?.error) {
+        toast.error("Guest login failed");
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success(`Logged in as Guest ${role === userRoles.ADMIN ? "ADMIN" : "STUDENT"}`);
+      setIsLoading(false);
+    } catch (err: any) {
+      console.error(err);
+
+      const apiError = err?.response?.data;
+
+      // ✅ ZOD FIELD ERRORS
+      if (apiError?.errors) {
+        (Object.values(apiError.errors) as string[][])
+          .flat()
+          .forEach((msg) => toast.error(msg));
+
+      } else {
+        toast.error(
+          apiError?.message ||
+          apiError?.error ||
+          "Signup failed. Please try again."
+        );
+      }
+    }
   };
 
 
@@ -184,6 +229,26 @@ function Login() {
             />
             Continue with Google
           </Button>
+          <div className="mt-4 grid gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleGuestLogin(userRoles.ADMIN)}
+            >
+              Login as Guest Admin
+            </Button>
+
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isLoading}
+              onClick={() => handleGuestLogin(userRoles.STUDENT)}
+            >
+              Login as Guest Student
+            </Button>
+          </div>
+
         </CardContent>
 
         <CardFooter className="text-center flex flex-col">
